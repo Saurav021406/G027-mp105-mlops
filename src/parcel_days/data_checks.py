@@ -13,6 +13,13 @@ def find_unit_mixup(df, column="weight_kg", group_col="destination"):
     return group_value, factor
 
 
+def find_target_typos(df, column="delivery_days", threshold=15):
+    """Return the number of rows whose target is about 10 times too big."""
+    mask = df[column] > threshold
+    return int(mask.sum())
+
+
 if __name__ == "__main__":
     df = pd.read_csv("data/raw/train.csv")
     print(find_unit_mixup(df))
+    print(find_target_typos(df))
