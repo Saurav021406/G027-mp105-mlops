@@ -1,6 +1,25 @@
-
 data:
   raw_dir: data/raw
   train_path: data/raw/train.csv
   later_path: data/raw/later.csv
   holdout_path: data/raw/holdout_features.csv
+
+
+paths:
+  train: data/raw/train.csv
+  later: data/raw/later.csv
+  holdout: data/raw/holdout_features.csv
+  model_out: models/model.joblib
+
+mlflow:
+  tracking_uri: sqlite:///mlflow.db
+  experiment_name: mp105-parcel-delivery
+  registered_model_name: mp105-delivery-days
+
+train:
+  test_size: 0.2
+  random_state: 42
+  runs:
+    - {n_estimators: 50, max_depth: 5}
+    - {n_estimators: 100, max_depth: 10}
+    - {n_estimators: 200, max_depth: null}
