@@ -1,0 +1,6 @@
+
+data:
+  raw_dir: data/raw
+  train_path: data/raw/train.csv
+  later_path: data/raw/later.csv
+  holdout_path: data/raw/holdout_features.csv
