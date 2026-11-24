@@ -44,6 +44,23 @@ def find_sentinel(df):
     return findings
 
 
+def find_spelling_variants(df, column="service"):
+    """Map each spelling variant of a category to its real category.
+
+    Returns a dict {variant: real_category}.
+    """
+    real_categories = ["express", "standard", "economy"]
+    mapping = {}
+    for raw in df[column].dropna().unique():
+        clean = raw.strip().lower().rstrip(".")
+        for category in real_categories:
+            if len(clean) >= 3 and category.startswith(clean):
+                mapping[raw] = category
+                break
+        else:
+            mapping[raw] = "UNKNOWN"
+    return mapping
+
 
 if __name__ == "__main__":
     df = pd.read_csv("data/raw/train.csv")
@@ -51,4 +68,5 @@ if __name__ == "__main__":
     print(find_unit_mixup(df))
     print(find_target_typos(df))
     print("Sentinel Check:", find_sentinel(df))
+    print(sorted(set(find_spelling_variants(df).values())))
     
