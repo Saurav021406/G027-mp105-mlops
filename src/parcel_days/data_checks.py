@@ -53,6 +53,23 @@ def find_spelling_variants(df, column="service"):
         else:
             mapping[raw] = "UNKNOWN"
     return mapping
+
+
+def find_stuck_sensor(df, column="declared_value_rs", date_col="date"):
+    """Find the longest run of rows (sorted by date) where a column repeats one value.
+
+    Returns (column, stuck_value, start_date, end_date, run_length).
+    """
+    data = df.sort_values(date_col, kind="stable").reset_index(drop=True)
+    run_id = (data[column] != data[column].shift()).cumsum()
+    run_lengths = run_id.value_counts()
+    longest = run_lengths.idxmax()
+    run = data[run_id == longest]
+    start_date = str(run[date_col].min())[:10]
+    end_date = str(run[date_col].max())[:10]
+    return column, run[column].iloc[0], start_date, end_date, int(run_lengths.max())
+
+
 def find_duplicates(df):
     """Return the total number of duplicate rows."""
     duplicate_count = int(df.duplicated().sum())
@@ -96,5 +113,6 @@ if __name__ == "__main__":
     print(find_target_typos(train))
     print("Sentinel Check:", find_sentinel(train))
     print("Service categories:", sorted(set(find_spelling_variants(train).values())))
+    print("Stuck sensor:", find_stuck_sensor(train))
     print("Duplicate rows:", find_duplicates(train))
     print("Leaking columns:", find_leaking_column(train, holdout))
