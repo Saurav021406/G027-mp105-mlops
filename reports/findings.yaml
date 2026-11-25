@@ -35,28 +35,28 @@ data_issues:
   spelling_variants:
     present: true
     column: service
-    true_levels: 3
+    true_levels: 3         # how many real categories there are after cleaning
 
 tracking:
   experiment_name: mp105-parcel-delivery
-  best_run_id: ceb55afbdf634f0bb0320f697231513d
+  best_run_id: ceb55afbdf634f0bb0320f697231513d  # v1 model run
   registered_model_name: mp105-delivery-days
-  champion_version: 1
+  champion_version: 2
 
 monitoring:
   psi:                     # cleaned train.csv vs later.csv, 10 bins
-    distance_km: null
-    weight_kg: null
-    hub_backlog: null
-    pin_code_tier: null
-    declared_value_rs: null
-    transfers: null
-  most_drifted_feature: null
+    distance_km: 4.3449
+    weight_kg: 0.0355
+    hub_backlog: 0.0303
+    pin_code_tier: 0.0123
+    declared_value_rs: 0.0597
+    transfers: 0.0251
+  most_drifted_feature: distance_km
   mae_by_group:            # v1 on later.csv, per value of destination
-    'Metro': null
-    'Tier-2': null
-    'Rural': null
-  worst_served_group: null
-  mae_v1_on_check: null    # v1 on the last 30% of later.csv (by date)
-  mae_v2_on_check: null    # v2 on the same rows
-  decision: null           # promote or keep
+    'Metro': 1.1685
+    'Tier-2': 1.0469
+    'Rural': 2.588
+  worst_served_group: Rural
+  mae_v1_on_check: 1.9195  # v1 on the last 30% of later.csv (by date)
+  mae_v2_on_check: 0.7969  # v2 on the same rows
+  decision: promote        # promote or keep
