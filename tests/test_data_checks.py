@@ -27,9 +27,25 @@ def test_find_stuck_sensor_finds_longest_run():
     assert (col, value, start, end, length) == ("declared_value_rs", 9, "2026-05-03", "2026-05-06", 4)
 
 
-def test_find_sentinel_detects_and_ignores():
-    df = pd.DataFrame({"x": [1, -999, 3], "y": [1, 2, 3]})
-    assert find_sentinel(df) == {"x": {"value": -999, "count": 1}}
+
+def test_find_sentinel_detects_multiple_values_in_same_column():
+    df = pd.DataFrame({
+        "x": [-1, -1, 9999, 10],
+        "y": [-999, 5, 6, 7],
+        "z": [1, 2, 3, 4]
+    })
+
+    expected = {
+        "x": [
+            {"value": -1, "count": 2},
+            {"value": 9999, "count": 1}
+        ],
+        "y": [
+            {"value": -999, "count": 1}
+        ]
+    }
+
+    assert find_sentinel(df) == expected 
 
 
 def test_find_leaking_column_flags_target_copy():

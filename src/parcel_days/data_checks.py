@@ -17,22 +17,34 @@ def find_target_typos(df, column="delivery_days", threshold=15):
     return int(mask.sum())
 
 
+
 def find_sentinel(df):
-    """Check numeric columns for common sentinel values."""
-    sentinel_values = [-999, -9999, 999999, 999999999]
+    """
+    Check numeric columns for common sentinel values.
+
+    Returns a dictionary where each column contains
+    a list of detected sentinel values and their counts.
+    """
+
+    sentinel_values = [-1, -999, -9999, 9999, 999999, 999999999]
+
     findings = {}
 
     numeric_columns = df.select_dtypes(include="number").columns
 
     for column in numeric_columns:
         for value in sentinel_values:
+
             count = int((df[column] == value).sum())
 
             if count > 0:
-                findings[column] = {
+                if column not in findings:
+                    findings[column] = []
+
+                findings[column].append({
                     "value": value,
                     "count": count
-                }
+                })
 
     return findings
 
